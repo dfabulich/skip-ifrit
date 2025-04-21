@@ -1,5 +1,5 @@
 import XCTest
-@testable import Ifrit
+@testable import SkipIfrit
 
 class Fuse_TestsBasic: XCTestCase {
     

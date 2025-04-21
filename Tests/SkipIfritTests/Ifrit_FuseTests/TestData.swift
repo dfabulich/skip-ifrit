@@ -1,5 +1,5 @@
 import Foundation
-@testable import Ifrit
+@testable import SkipIfrit
 
 internal struct Book: Searchable {
     let author: String

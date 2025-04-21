@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import Ifrit
+@testable import SkipIfrit
 
 final class IfritDoxCode_Leve_Test: XCTestCase {
     

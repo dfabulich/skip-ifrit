@@ -1,6 +1,6 @@
 import Foundation
 import XCTest
-@testable import Ifrit
+@testable import SkipIfrit
 
 class Fuse_Performance: XCTestCase {
     /*
