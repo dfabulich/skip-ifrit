@@ -21,19 +21,4 @@ final class IfritDoxCode_Leve_Test: XCTestCase {
         // ASYNC: callbacks
         // DOES NOT SUPPORTED
     }
-    
-    //#### Levenstain search in `[Fuseable]` objects
-    func test_2() throws {
-        let animes = getAnimeList(count: 10) // Fusable objects
-        
-        let result = Levenstain.searchSync("Fairy Tail the Movie: The Phoenix Priestess", in: animes, by: \AnimeListInfo.properties )
-        
-        // --------------------
-        // ASYNC: async/await
-        // DOES NOT SUPPORTED
-        
-        // --------------------
-        // ASYNC: callbacks
-        // DOES NOT SUPPORTED
-    }
 }

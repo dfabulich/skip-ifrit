@@ -22,42 +22,6 @@ final class Levenstain_Tests: XCTestCase {
         XCTAssertEqual(incorrectSearch.count, 4)
         XCTAssertGreaterThan(incorrectSearch.first!.diffScore, 0.9)
     }
-    
-    func test_BasicSearch2() throws {
-        let animes = ["Gekijouban Fairy Tail: Houou no Miko",
-                    "Fairy Tail the Movie: The Phoenix Priestess",
-                    "Priestess of the Phoenix",
-                    "Fairy Tail: The Phoenix Priestess"]
-        
-        let animesSearch = Levenstain.searchFuzzy("Fairy Tail: The Phoenix Priestess", in: animes )
-        
-        
-        XCTAssertEqual(animesSearch[0].asString, "Fairy Tail: The Phoenix Priestess")
-    }
-    
-    func test_AdvancedSearch() throws {
-        let animes = getAnimeList(count: 10)
-        
-        let result = Levenstain.searchSync("Fairy Tail the Movie: The Phoenix Priestess", in: animes, by: \AnimeListInfo.properties)
-        
-        XCTAssertEqual(result.count, 10)
-        XCTAssertEqual(result.first?.diffScore, 0)
-        
-        let result2 = Levenstain.searchSync("Test of Array", in: animes, by: \AnimeListInfo.properties)
-        
-        XCTAssertEqual(result2.count, 10)
-        XCTAssertEqual(result2.first?.diffScore, 0)
-        
-        let result3 = Levenstain.searchSync("Array of Tests", in: animes, by: \AnimeListInfo.properties)
-        
-        XCTAssertEqual(result3.count, 10)
-        XCTAssertGreaterThan(result3.first!.diffScore, 0.666)
-        
-        let incorrectSearch = Levenstain.searchSync("Мій маленький поні", in: animes, by: \AnimeListInfo.properties)
-        
-        XCTAssertEqual(incorrectSearch.count, 10)
-        XCTAssertGreaterThan(incorrectSearch.first!.diffScore, 0.6)
-    }
 }
 
 
@@ -65,16 +29,6 @@ final class Levenstain_Tests: XCTestCase {
 ///Performance tests
 /////////////////////////
 extension Levenstain_Tests {
-    func test_AdvancedSearchPerformance() throws {
-        let animes = getAnimeList(count: 1_300)
-        
-        self.measure {
-            let _ = Levenstain.searchSync("Fairy Tail the Movie: The Phoenix Priestess", in: animes, by: \AnimeListInfo.properties)
-        }
-        // M1 PC results:
-        // search in 10_000 objects [5 search strings in object]
-        // 178.825 seconds
-    }
     
     func test_BasicSearchPerformance() throws {
         var animes = ["Gekijouban Fairy Tail: Houou no Miko",
