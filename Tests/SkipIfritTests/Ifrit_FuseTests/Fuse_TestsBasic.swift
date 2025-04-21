@@ -50,18 +50,12 @@ class Fuse_TestsBasic: XCTestCase {
         XCTAssert(results[0].ranges[0] == 4...7, "The range goes over the matched substring")
     }
     
+    struct Book: Searchable {
+        let author: String
+        let title: String
+    }
+    
     func testProtocolWeightedSearch1() {
-        struct Book: Searchable {
-            let author: String
-            let title: String
-            
-            var properties: [FuseProp] {
-                return [
-                    FuseProp(author, weight: 0.3),
-                    FuseProp(title, weight: 0.7)
-                ]
-            }
-        }
         
         let books: [Book] = [
             Book(author: "John X", title: "Old Man's War fiction"),
@@ -69,7 +63,10 @@ class Fuse_TestsBasic: XCTestCase {
         ]
         
         let fuse = Fuse()
-        let results = fuse.searchSync("man", in: books, by: \Book.properties)
+        let results = fuse.searchSync("man", in: books.map({book in [
+            FuseProp(book.author, weight: 0.3),
+            FuseProp(book.title, weight: 0.7)
+        ]}))
         
         XCTAssert(results.count > 0, "There are results")
         XCTAssert(results[0].index == 0, "The first result is the first book")
@@ -77,25 +74,16 @@ class Fuse_TestsBasic: XCTestCase {
     }
     
     func testProtocolWeightedSearch2() {
-        struct Book: Searchable {
-            let author: String
-            let title: String
-            
-            var properties: [FuseProp] {
-                return [
-                    FuseProp(author, weight: 0.7),
-                    FuseProp(title, weight: 0.3)
-                ]
-            }
-        }
-        
         let books: [Book] = [
             Book(author: "John X", title: "Old Man's War fiction"),
             Book(author: "P.D. Mans", title: "Right Ho Jeeves")
         ]
         
         let fuse = Fuse()
-        let results = fuse.searchSync("man", in: books, by: \Book.properties)
+        let results = fuse.searchSync("man", in: books.map({book in [
+            FuseProp(book.author, weight: 0.7),
+            FuseProp(book.title, weight: 0.3)
+        ]}))
         
         XCTAssert(results.count > 0, "There are results")
         XCTAssert(results[0].index == 1, "The first result is the second book")
@@ -108,18 +96,7 @@ class Fuse_TestsBasic: XCTestCase {
         let correctIdx = animes.firstIndex(where: { $0.ukrainian.contains("Тріган") })
         
         let fuse = Fuse()
-        let results = fuse.searchSync("тріган", in: animes, by: \Anime.properties)
-        
-        XCTAssertEqual(results.first!.index, correctIdx)
-    }
-    
-    func test_CorrectIdOfObject_ProperiesArraysSearchAsync() async {
-        let animes: [Anime] = largeAnimeArray()
-        
-        let correctIdx = animes.firstIndex(where: { $0.ukrainian.contains("Тріган") })
-        
-        let fuse = Fuse()
-        let results = await fuse.search("тріган", in: animes, by: \Anime.properties)
+        let results = fuse.searchSync("тріган", in: animes.map({anime in anime.properties}))
         
         XCTAssertEqual(results.first!.index, correctIdx)
     }
@@ -134,33 +111,5 @@ class Fuse_TestsBasic: XCTestCase {
         let results = fuse.searchSync(bookName, in: books)
         
         XCTAssertEqual(results.first!.index, correctIdx)
-    }
-    
-    func test_CorrectIdOfString_SearchAsync() async {
-        let books = largeBookTitlesArray(len: 1000)
-        let bookName = "The Adventures and Misadventures of Magroll"
-        
-        let correctIdx = books.firstIndex(where: { $0 == bookName } )
-        
-        let fuse = Fuse()
-        let results = await fuse.search(bookName, in: books)
-        
-        XCTAssertEqual(results.first!.index, correctIdx)
-    }
-    
-    func test_SyncAndAsyncWorksTheSameWay() async {
-        let books = largeBookTitlesArray(len: 1000)
-        let bookName = "The Adventures and Misadventures of Magroll"
-        
-        let fuse = Fuse()
-        
-        let results1 = fuse.searchSync(bookName, in: books)
-        let results2 = await fuse.search(bookName, in: books)
-        
-        results1.indices.forEach{ idx in
-            XCTAssertEqual(results1[idx].index, results2[idx].index)
-            XCTAssertEqual(results1[idx].ranges, results2[idx].ranges)
-            XCTAssertEqual(results1[idx].diffScore, results2[idx].diffScore)
-        }
     }
 }
