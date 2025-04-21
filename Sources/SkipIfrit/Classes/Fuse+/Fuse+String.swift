@@ -170,7 +170,7 @@ extension Fuse {
                 
                 // Subsequent passes: fuzzy match
                 if i > 0 {
-                    bitArr[j] |= (((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1) | lastBitArr[j + 1]
+                    bitArr[j] = bitArr[j] | (((lastBitArr[j + 1] | lastBitArr[j]) << 1) | 1) | lastBitArr[j + 1]
                 }
                 
                 if (bitArr[j] & pattern.mask) != 0 {

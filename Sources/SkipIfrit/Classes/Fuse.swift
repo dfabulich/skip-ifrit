@@ -30,7 +30,7 @@ public class Fuse: @unchecked Sendable {
         self.tokenize = tokenize
         self.objSortStrategy = objSortStrategy
         self.qos = qos
-        self.searchQueue = DispatchQueue(label: "ifrit.search.queue", qos: qos, attributes: .concurrent)
+        self.searchQueue = DispatchQueue(label: "ifrit.search.queue", qos: qos, attributes: DispatchQueue.Attributes.concurrent)
     }
     
     /// Creates a pattern tuple.

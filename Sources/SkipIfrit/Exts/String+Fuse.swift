@@ -30,7 +30,7 @@ internal extension String {
         
         let start: String.Index = self.index(self.startIndex, offsetBy: position)
         let range: Range<Index> = Range<Index>.init(uncheckedBounds: (lower: start, upper: self.endIndex))
-        return self.range(of: aString, options: .literal, range: range, locale: nil)?.lowerBound
+        return self.range(of: aString, options: CompareOptions.literal, range: range, locale: nil)?.lowerBound
     }
     
     /// Searches and returns the index within the string of the last occurrence of the `searchStr`.
@@ -48,7 +48,7 @@ internal extension String {
         let start = min(max(position, 0), len)
         let searchLen = searchStr.count
         let r: Range<Index> = Range<Index>.init(uncheckedBounds: (lower: self.startIndex, upper: self.index(self.startIndex, offsetBy: min(start + searchLen, len))))
-        if let range = self.range(of: searchStr, options: [.backwards, .literal], range: r) {
+        if let range = self.range(of: searchStr, options: [CompareOptions.backwards, CompareOptions.literal], range: r) {
             return range.lowerBound
         } else {
             return nil
